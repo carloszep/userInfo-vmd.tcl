@@ -871,7 +871,7 @@ proc getTrajProp {prop {id "top"} {l_fragId "name"} args} {
               if {$prevFinTime == "unk"} {return 0}
               set retValProp 1
             } else {
-              if {$prevFinTime > [lindex $l_trajFrag $ind(iniTime)]} {
+              if {$prevFinTime >= [lindex $l_trajFrag $ind(iniTime)]} {
                 return 0
               } else {
                 set prevFinTime [lindex $l_trajFrag $ind(finTime)]
