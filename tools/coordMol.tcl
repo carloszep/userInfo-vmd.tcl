@@ -22,11 +22,11 @@ proc coordMol {IDmol {selTxt "all"} {minPad "none"}} {
   set selMol [atomselect $IDmol $selTxt]
   puts "-- Coordinates of the center: --"
   foreach c [measure center $selMol] {
-    puts $c
+    puts [format "%2.3f" $c]
     }
   puts "-- Center of mass: --"
   foreach c [measure center $selMol weight mass] {
-    puts $c
+    puts [format "%2.3f" $c]
     }
   set cuboCoord [measure minmax $selMol]
   set iniCoord [lindex $cuboCoord 0]
@@ -38,14 +38,15 @@ proc coordMol {IDmol {selTxt "all"} {minPad "none"}} {
     set dim [expr {[lindex $finCoord $c] - [lindex $iniCoord $c]}]
     lappend dimBox $dim
     if {$dim >= $max} {set max $dim}
-    puts $dim
+    puts [format "%2.3f" $dim]
     }
   $selMol delete
   if {$minPad != "none"} {
     set d [expr {$max + $minPad*2.0}]
     puts "-- Solvent pads for a cubic box of length [format "%2.3f" $d] (Angstroms): --"
     for {set c 0} {$c <= 2} {incr c} {
-      puts [expr {(($max+($minPad*2.0))-[lindex $dimBox $c])/2.0}]
+      puts [format "%2.3f" \
+                [expr {(($max + ($minPad*2.0)) - [lindex $dimBox $c])/2.0}]]
       }
     }
   }
