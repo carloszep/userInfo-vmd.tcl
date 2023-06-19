@@ -1,9 +1,10 @@
 #|-coordMol006.tcl :|{condText} ================================================
 #|  -tcl script for VMD-v.1.9.1 to be sourced in the TkConsole .
-#|  -version :-0.0.6 ;
+#|  -version :-0.0.7 ;
 #|  -version information :
-#|    -the resulting side length of the cubic solvent box is reported ;
-#|  -date :-2016-06-09.Thu ;
+#|    -report a string to be input to the solvate library in vmd .
+#|    -reports also the celBasisVectors for NAMD input ;
+#|  -date :-2023-06-19.Mon ;
 #|  -proc coordMol {IDmol {selTxt "all"} {minPad "none"}} :
 #|    -report for an atom selection in a specified molecule :
 #|      -cartesian coordinates for the geometric center .
@@ -11,7 +12,7 @@
 #|      -dimensions of the cube containing the atoms .
 #|      -dimensions (lengths in cartesian coordinates) of a cubic solvent box
 #|       _ with a specified minimum solvent pad around the solute atoms ;;
-puts "center and box-coordinates dimensions of a molecule v.0.0.6"
+puts "center and box-coordinates dimensions of a molecule v.0.0.7"
 puts "usage: coordMol <id> \[<selTxt>\] \[<minPad>\]"
 
 proc coordMol {IDmol {selTxt "all"} {minPad "none"}} {
@@ -21,12 +22,12 @@ proc coordMol {IDmol {selTxt "all"} {minPad "none"}} {
   puts "  min solvent pad: $minPad"
   set selMol [atomselect $IDmol $selTxt]
   puts "-- Coordinates of the center: --"
-  foreach c [measure center $selMol] {
-    puts [format "%2.3f" $c]
+  foreach cg [measure center $selMol] {
+    puts [format "%2.3f" $cg]
     }
   puts "-- Center of mass: --"
-  foreach c [measure center $selMol weight mass] {
-    puts [format "%2.3f" $c]
+  foreach cm [measure center $selMol weight mass] {
+    puts [format "%2.3f" $cm]
     }
   set cuboCoord [measure minmax $selMol]
   set iniCoord [lindex $cuboCoord 0]
@@ -44,10 +45,20 @@ proc coordMol {IDmol {selTxt "all"} {minPad "none"}} {
   if {$minPad != "none"} {
     set d [expr {$max + $minPad*2.0}]
     puts "-- Solvent pads for a cubic box of length [format "%2.3f" $d] (Angstroms): --"
+    set pads {}
     for {set c 0} {$c <= 2} {incr c} {
-      puts [format "%2.3f" \
-                [expr {(($max + ($minPad*2.0)) - [lindex $dimBox $c])/2.0}]]
+      set pad [expr {(($max + ($minPad*2.0)) - [lindex $dimBox $c])/2.0}]
+      lappend pads $pad
+      puts [format "%2.3f" $pad]
       }
+    set coordLbl(0) "x"
+    set coordLbl(1) "y"
+    set coordLbl(2) "z"
+    set strPadsSolv ""
+    for {set c 0} {$c <= 2} {incr c} {
+      set strPadsSolv "${strPadsSolv} -$coordLbl($c) [format "%2.2f" [lindex $pads $c]] +$coordLbl($c) [format "%2.2f" [lindex $pads $c]]"
+      }
+    return ${strPadsSolv}
     }
   }
 
