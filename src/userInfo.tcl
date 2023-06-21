@@ -110,7 +110,7 @@ global userInfo_version userInfo_logFileName maxTrajSizeGB
 global currTrajSize ind trajFragList selInfo
 set userInfo_version 0.0.5
 set userInfo_logFileName "log-userInfo-v.$userInfo_version.txt"
-set maxTrajSizeGB 5.0
+set maxTrajSizeGB 6.0
 if {![info exists currTrajSize]} {set currTrajSize 0.0}
 
 set selInfo(prot,selTxt) "protein"
