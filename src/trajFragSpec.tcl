@@ -33,7 +33,7 @@
 #|      -acceptable values :-"top" :-VMD's current top molecule is used ;;
 #|      -default value :-"top" ;;
 #|    -args (variable arguments) :
-#|      -exlude, except :
+#|      -exclude, except :
 #|        -list of fragIds to be excluded from the fragment specification .
 #|        -acceptable values :
 #|          -the same as l_fragId except for "all" and "exclude" keywords ;;
