@@ -1,3 +1,8 @@
+#|-trajFragSpec.tcl :
+#|  -procedure trajFragSpec implemented for the userInfoLib namespace .
+#|  - ;
+
+
 #|-proc trajFragSpec {l_fragId {id "top"} args} :
 #|  -interpreter for user-defined trajectory fragment specifications (fragId) .
 #|  -returns a valid specification of trajectory fragments for a molecule Id :
@@ -39,6 +44,12 @@
 #|          -the same as l_fragId except for "all" and "exclude" keywords ;;
 #|      -loSt, channelIdi, log :-output stream for log messages .
 #|        -default value :-stdout ;;;;;
+
+
+namespace eval userInfoLib {
+
+namespace export trajFragSpec
+
 proc trajFragSpec {l_fragId {id "top"} args} {
 # global variables
   global trajInfo ind
@@ -194,4 +205,11 @@ proc trajFragSpec {l_fragId {id "top"} args} {
     }
   return $retList
   }   ;# trajFragSpec
+
+}   ;# namespace eval userInfoLib
+
+::userInfoLib::add_commands trajFragSpec
+::userInfoLib::logMsg "added commands in trajFragSpec.tcl to userInfoLib namespace" 1
+
+
 
