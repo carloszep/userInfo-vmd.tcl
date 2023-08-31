@@ -1,7 +1,12 @@
 #|-trajFragSpec.tcl :
 #|  -procedure trajFragSpec implemented for the userInfoLib namespace .
-#|  - ;
 
+#|  -namespace userInfoLib :
+namespace eval userInfoLib {
+#|    -export :
+#|      -trajFragSpec ;
+namespace export trajFragSpec
+#|    -namespace commands :
 
 #|-proc trajFragSpec {l_fragId {id "top"} args} :
 #|  -interpreter for user-defined trajectory fragment specifications (fragId) .
@@ -16,7 +21,7 @@
 #|    -l_fragId :-list of user-provided traj fragment specifications .
 #|      -acceptable values in the list :
 #|        -list of fragNames or simNames :
-#|          -each refer to names at positions 0 and 1 of the trajFrag lists
+#|          -each refer to names at positions 0 and 1 of the trajFrag list
 #|           _ in the trajInfo array ;
 #|        -"all" :-a list with all the fragNames is returned .
 #|          -all fragments in the trajFrag list are specified ;
@@ -44,15 +49,11 @@
 #|          -the same as l_fragId except for "all" and "exclude" keywords ;;
 #|      -loSt, channelIdi, log :-output stream for log messages .
 #|        -default value :-stdout ;;;;;
-
-
-namespace eval userInfoLib {
-
-namespace export trajFragSpec
-
 proc trajFragSpec {l_fragId {id "top"} args} {
 # global variables
-  global trajInfo ind
+  global trajInfo
+# namespace variables
+  variable indTFL
 # default values for variables and arguments
   set loSt stdout; set exclude {}
   if {$id == "top"} {set id [molinfo top]}
@@ -61,9 +62,9 @@ proc trajFragSpec {l_fragId {id "top"} args} {
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
     if {[llength $args] > 0} {
       foreach {arg val} $args {
-        switch $arg {
-          "exclude" - "except" - "excl" - "exFragId" {set exclude $val}
-          "loSt" -  "channelId" - "log" {set loSt $val}
+        switch [string tolower $arg] {
+          "exclude" - "except" - "excl" - "exfragid" {set exclude $val}
+          "lost" -  "channelid" - "log" {set loSt $val}
           default {puts $loSt "trajFragSpec: argument unkown: $arg"}
           }
         }
@@ -98,11 +99,11 @@ proc trajFragSpec {l_fragId {id "top"} args} {
   set namesTmp {}
   for {set tfi 0} {$tfi < [llength $trajInfo($id,trajFrag)]} {incr tfi} {
     set l_trajFrag [lindex $trajInfo($id,trajFrag) $tfi]
-    lappend fragNamesTmp [lindex $l_trajFrag $ind(fragName)]
-    lappend simNamesTmp [lindex $l_trajFrag $ind(simName)]
-    if {($trajInfo($id,name) == [lindex $l_trajFrag $ind(fragName)]) || \
-        ($trajInfo($id,name) == [lindex $l_trajFrag $ind(simName)])} {
-        lappend namesTmp [lindex $l_trajFrag $ind(fragName)]
+    lappend fragNamesTmp [lindex $l_trajFrag $indTFL(fragName)]
+    lappend simNamesTmp [lindex $l_trajFrag $indTFL(simName)]
+    if {($trajInfo($id,name) == [lindex $l_trajFrag $indTFL(fragName)]) || \
+        ($trajInfo($id,name) == [lindex $l_trajFrag $indTFL(simName)])} {
+        lappend namesTmp [lindex $l_trajFrag $indTFL(fragName)]
       }
     }
 # decode exclude list into fragNames
@@ -112,19 +113,19 @@ proc trajFragSpec {l_fragId {id "top"} args} {
       set l_fragNameEx [concat $l_fragNameEx $namesTmp]
     } elseif {$excl == "first"} {
       lappend l_fragNameEx [lindex [lindex $trajInfo($id,trajFrag) 0] \
-                                   $ind(fragName)]
+                                   $indTFL(fragName)]
     } elseif {($excl == "last") || ($excl == "end")} {
       lappend l_fragNameEx [lindex [lindex $trajInfo($id,trajFrag) end] \
-                                   $ind(fragName)]
+                                   $indTFL(fragName)]
     } elseif {($excl == "to") || ($excl == "-")} {
       lappend l_fragNameEx "to"
     } elseif {[string is integer $excl]} {
       if {($excl >= 0) && ($excl < [llength $trajInfo($id,trajFrag)])} {
         lappend l_fragNameEx [lindex [lindex $trajInfo($id,trajFrag) $excl] \
-                                     $ind(fragName)]}
+                                     $indTFL(fragName)]}
     } elseif {[string first "end-" $excl] == 0} {
       lappend l_fragNameEx [lindex [lindex $trajInfo($id,trajFrag) $excl] \
-                                   $ind(fragName)]
+                                   $indTFL(fragName)]
     } elseif {[lsearch $simNamesTmp $excl] >= 0} {
 # no keyword used, then checks for a simName specified in excl
       for {set isn 0} {$isn < [llength $simNamesTmp]} {incr isn} {
@@ -158,19 +159,19 @@ proc trajFragSpec {l_fragId {id "top"} args} {
       set l_fragName [concat $l_fragName $namesTmp]
     } elseif {$fragId == "first"} {
       lappend l_fragName [lindex [lindex $trajInfo($id,trajFrag) 0] \
-                                 $ind(fragName)]
+                                 $indTFL(fragName)]
     } elseif {($fragId == "last") || ($fragId == "end")} {
       lappend l_fragName [lindex [lindex $trajInfo($id,trajFrag) end] \
-                                 $ind(fragName)]
+                                 $indTFL(fragName)]
     } elseif {($fragId == "to") || ($fragId == "-")} {
       lappend l_fragName "to"
     } elseif {[string is integer $fragId]} {
       if {($fragId >= 0) && ($fragId < [llength $trajInfo($id,trajFrag)])} {
         lappend l_fragName [lindex [lindex $trajInfo($id,trajFrag) $fragId] \
-                                   $ind(fragName)]}
+                                   $indTFL(fragName)]}
     } elseif {[string first "end-" $fragId] == 0} {
       lappend l_fragName [lindex [lindex $trajInfo($id,trajFrag) $fragId] \
-                                 $ind(fragName)]
+                                 $indTFL(fragName)]
     } elseif {[lsearch $simNamesTmp $fragId] >= 0} {
 # no keyword used, then checks for a simName specified in fragId
       for {set isn 0} {$isn < [llength $simNamesTmp]} {incr isn} {
@@ -208,6 +209,7 @@ proc trajFragSpec {l_fragId {id "top"} args} {
 
 }   ;# namespace eval userInfoLib
 
+#|    - ;;
 ::userInfoLib::add_commands trajFragSpec
 ::userInfoLib::logMsg "added commands in trajFragSpec.tcl to userInfoLib namespace" 1
 
