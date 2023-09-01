@@ -3,9 +3,11 @@
 
 #|  -namespace userInfoLib :
 namespace eval userInfoLib {
+
 #|    -export :
 #|      -trajFragSpec ;
 namespace export trajFragSpec
+
 #|    -namespace commands :
 
 #|-proc trajFragSpec {l_fragId {id "top"} args} :
@@ -54,10 +56,12 @@ proc trajFragSpec {l_fragId {id "top"} args} {
   global trajInfo
 # namespace variables
   variable indTFL
+# print log information (logLevel 2, except for errors)
+  state_save
 # default values for variables and arguments
   set loSt stdout; set exclude {}
   if {$id == "top"} {set id [molinfo top]}
-  if {$id == -1} {puts $loSt "trajFragSpec: No trajInfo loaded."; return ""}
+  if {$id == -1} {logMsg "trajFragSpec: No trajInfo loaded." 1; return ""}
 # decode variable arguments
   if {[expr {[llength $args]%2}] == 0} {   ;# even or 0 optional arguments
     if {[llength $args] > 0} {

@@ -6,7 +6,7 @@
 #|  -started from the userInfoLib_v.0.0.5 library .
 #|  -dates :
 #|    -created :-2023-05-03.Wed ;
-#|    -modified :-2023-08-29.Tue ;;
+#|    -modified :-2023-09-01.Fri ;;
 #|  -authors and contributors :
 #|    -Carlos Z. Gómez Castro ;
 #|  -public software repositories :
@@ -21,12 +21,19 @@
 #|  -source :
 #|    -logLib.tcl ;
 source logLib.tcl
+
 #|  -namespace eval userInfoLib :
 namespace eval userInfoLib {
 
 #|    -import :
 #|      -::logLib::* ;
   namespace import ::logLib::*
+
+#|    -export commands :
+#|      -get_maxTrajSizeGB .
+#|      -set_maxTrajSizeGB  .
+#|      -loadedTrajSize ;
+namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
 
 #|    -variables :
 #|      -maxTrajSizeGB .
@@ -41,10 +48,21 @@ namespace eval userInfoLib {
 
 #|    -commands :
 #|      -proc init {} :
-#|        - ;
+#|        -initialization of the userInfoLib namespace .
+#|        -it also initializes the imported logLib namespace ;
   proc init {} {
     variable indTFL
     variable trajFragList
+# initializes of the name and version of the logLib namespace :
+    set_logName "userInfoLib"
+    set_logVersion "0.0.2"
+    set_logLevel 3
+    set_logFileName ""
+# configure string prefix for all log messages
+    set_logPrefixStr "userInfo: "
+# incorportates the userInfo list of commands to the logLib list
+    add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB \
+                       loadedTrajSize get_trajFragList]
     set i 0
     foreach elem $trajFragList {
       set indTFL($elem) $i
@@ -85,22 +103,6 @@ namespace eval userInfoLib {
 #|    - ;
   }   ;# namespace eval userInfoLib
 
-#|  -initialization of the userInfoLib namespace :
-#|    -intended to show the usage of the library and setup default values .
-#|    -set the name and version of the library using the logLib namespace .
-::userInfoLib::set_logName_version userInfoLib 0.0.2
-#|    -set the library path prepended to the log file .
-::userInfoLib::set_logPath ""
-#|    -set the name of the file to output log messages .
-#|    -settting logFileName to 'stdout' outputs log only to screen .
-::userInfoLib::set_logFileName "stdout"
-#|    -set the logLevel controling the "amount" of log output .
-::userInfoLib::set_logLevel 3
-#|    -activates the output to the screen additional to file log output .
-::userInfoLib::logScreenOn
-#|    -incorportates the userInfo list of commands to the logLib list .
-::userInfoLib::add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize \
-                               get_trajFragList]
 #|    -reports to log the initial configuration .
 ::userInfoLib::logMsg "initialized [::userInfoLib::get_logName_version]" 1
 ::userInfoLib::logMsg "Manage VMD trajectories from MD simulations." 1
