@@ -35,15 +35,30 @@ namespace eval userInfoLib {
 #|      -loadedTrajSize ;
 namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
 
-#|    -variables :
-#|      -maxTrajSizeGB .
-#|      -currTrajSizeGB .
-#|      -trajFragList .
-#|      - ;
+#|    -namespace variables :
+#|      -maxTrajSizeGB :
+#|        -maximum size of memory used by loaded dcd trajectores .
+#|        -depends upon the SO and the physical RAM memory available .
+#|        -it is recommended to not using more than ~75% of the total RAM :
+#|          -for instance, with 4 GB of RAM, set maxTrajSizeGB to 3.0 ;;
   variable maxTrajSizeGB 6.0
+#|      -currTrajSizeGB :
+#|        -registers the amout of memory occupated by dcd trajectories
+#|         _ loaded into VMD using the userInfoLib utilities .
+#|        -before a traj fragment is loaded (i.e. by trajLoad), it is
+#|         _verified that currTrajSizeGB does not exceed maxTrajSizeGB ;
   variable currTrajSizeGB 0.0
-  variable trajFragList [list fragName simName dcdFile timeStep dcdFreq \
-               loadStep dcdSize iniTime finTime iniFrame finFrame frameTime]
+#|      -trajFragList :
+#|        -list of trajectory-related property names used by userInfoLib .
+#|        -default value :
+#|          -{fragName simName dcdFile  timeStep dcdFreq   loadstep dcdSize
+#|           _ iniTime finTime iniFrame finFrame frameTime} ;;
+  variable trajFragList [list fragName  simName   dcdFile  timeStep  dcdFreq  \
+                              loadStep  dcdSize   iniTime  finTime   iniFrame \
+                              finFrame  frameTime ]
+#|      -indTFL :
+#|        -maps the index of the property names in the trajFragList .
+#|        -it is initialized in the init command ;;
   variable indTFL
 
 #|    -commands :
@@ -54,15 +69,27 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
     variable indTFL
     variable trajFragList
 # initializes of the name and version of the logLib namespace :
-    set_logName "userInfoLib"
+    set_logName "userInfo"
     set_logVersion "0.0.2"
     set_logLevel 3
-    set_logFileName ""
-# configure string prefix for all log messages
-    set_logPrefixStr "userInfo: "
+    set_logFileName "stdout"
+    logMsg "" 2
+    set_logPrefixStr "[get_logName_version]: "
+# printing introduction
+    logMsg "userInfo library to manage Molecular Dynamics trajectories " 2
+    logMsg "  and set up structural analysis in VMD." 2
+    logMsg "Usage:" 2
+    logMsg " 1. source the trajInfo script for a specific simulation." 2
+    logMsg " 2. set the array selInfo for each atoms selections to be used." 2
+    logMsg "" 2
 # incorportates the userInfo list of commands to the logLib list
+    logMsg "adding userInfo variables and commands to logLib:" 3
+    logMsg "  commands: get_maxTrajSizeGB set_maxTrajSizeGB" 3
+    logMsg "            loadedTrajSize get_trajFragList" 3
+    logMsg "  variables: maxTrajSizeGB" 3
     add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB \
                        loadedTrajSize get_trajFragList]
+    add_variables [list maxTrajSizeGB]
     set i 0
     foreach elem $trajFragList {
       set indTFL($elem) $i
@@ -103,17 +130,6 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
 #|    - ;
   }   ;# namespace eval userInfoLib
 
-#|    -reports to log the initial configuration .
-::userInfoLib::logMsg "initialized [::userInfoLib::get_logName_version]" 1
-::userInfoLib::logMsg "Manage VMD trajectories from MD simulations." 1
-::userInfoLib::logMsg "log path: [::userInfoLib::get_logPath]" 2
-::userInfoLib::logMsg "log output to: [::userInfoLib::get_logOutputStream]" 2
-::userInfoLib::logMsg "output level: [::userInfoLib::get_logLevel]" 1
-::userInfoLib::logMsg "output file for log: [::userInfoLib::get_logFileName]" 2
-::userInfoLib::logMsg "print to screen: [::userInfoLib::get_logScreen]" 2
-::userInfoLib::logMsg "list of commands: [::userInfoLib::list_commands]" 2
-#|    -flush the output buffer .
-::userInfoLib::logFlush
 #|    -run the initialization proc .
 ::userInfoLib::init
 #|    -external procedures to be added to userInfoLib :

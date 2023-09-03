@@ -215,7 +215,7 @@ proc trajFragSpec {l_fragId {id "top"} args} {
 
 #|    - ;;
 ::userInfoLib::add_commands trajFragSpec
-::userInfoLib::logMsg "added commands in trajFragSpec.tcl to userInfoLib namespace" 1
+::userInfoLib::logMsg "added command in trajFragSpec.tcl to userInfoLib namespace" 1
 
 
 
