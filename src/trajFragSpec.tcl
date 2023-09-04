@@ -56,7 +56,7 @@ proc trajFragSpec {l_fragId {id "top"} args} {
   global trajInfo
 # namespace variables
   variable indTFL
-# print log information (logLevel 2, except for errors)
+# print log information (logLevel 2 or 3, except for errors)
   state_save
 # default values for variables and arguments
   set loSt stdout; set exclude {}
@@ -69,7 +69,7 @@ proc trajFragSpec {l_fragId {id "top"} args} {
         switch [string tolower $arg] {
           "exclude" - "except" - "excl" - "exfragid" {set exclude $val}
           "lost" -  "channelid" - "log" {set loSt $val}
-          default {puts $loSt "trajFragSpec: argument unkown: $arg"}
+          default {logMsg "trajFragSpec: argument unkown: $arg" 2}
           }
         }
       }
@@ -215,7 +215,7 @@ proc trajFragSpec {l_fragId {id "top"} args} {
 
 #|    - ;;
 ::userInfoLib::add_commands trajFragSpec
-::userInfoLib::logMsg "added command in trajFragSpec.tcl to userInfoLib namespace" 1
+::userInfoLib::logMsg "added command trajFragSpec to userInfoLib namespace" 3
 
 
 
