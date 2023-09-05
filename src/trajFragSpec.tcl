@@ -211,11 +211,13 @@ proc trajFragSpec {l_fragId {id "top"} args} {
   return $retList
   }   ;# trajFragSpec
 
+# initilizing trajFragSpec
+add_commands trajFragSpec
+logMsg "added command trajFragSpec to userInfoLib namespace" 3
+
 }   ;# namespace eval userInfoLib
 
 #|    - ;;
-::userInfoLib::add_commands trajFragSpec
-::userInfoLib::logMsg "added command trajFragSpec to userInfoLib namespace" 3
 
 
 
