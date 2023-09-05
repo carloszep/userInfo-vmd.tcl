@@ -48,18 +48,25 @@ namespace export trajFragSpec
 #|      -exclude, except :
 #|        -list of fragIds to be excluded from the fragment specification .
 #|        -acceptable values :
-#|          -the same as l_fragId except for "all" and "exclude" keywords ;;
-#|      -loSt, channelIdi, log :-output stream for log messages .
-#|        -default value :-stdout ;;;;;
+#|          -the same as l_fragId except for "all" and "exclude" keywords ;;;;
+#|  -notes :
+#|    -the args list is passed to the ::logLib::arg_interpreter, thus the
+#|     _ behavior of the logLib namespace can be modified for this command ;;
 proc trajFragSpec {l_fragId {id "top"} args} {
 # global variables
   global trajInfo
 # namespace variables
   variable indTFL
 # print log information (logLevel 2 or 3, except for errors)
-  state_save
+  save_state
+  set_logPrefixStr "  trajfragInfo: "
+  logMsg "Interpreting user-specified fragId specifications." 2
+  logMsg "l_fragId: $l_fragId" 2
+  logMsg "id: $id" 2
+  logMsg "args: $args" 2
+  set args [arg_interpreter $args]
 # default values for variables and arguments
-  set loSt stdout; set exclude {}
+  set exclude {}
   if {$id == "top"} {set id [molinfo top]}
   if {$id == -1} {logMsg "trajFragSpec: No trajInfo loaded." 1; return ""}
 # decode variable arguments
@@ -68,13 +75,12 @@ proc trajFragSpec {l_fragId {id "top"} args} {
       foreach {arg val} $args {
         switch [string tolower $arg] {
           "exclude" - "except" - "excl" - "exfragid" {set exclude $val}
-          "lost" -  "channelid" - "log" {set loSt $val}
           default {logMsg "trajFragSpec: argument unkown: $arg" 2}
           }
         }
       }
     } else {   ;# odd number of arguments
-      puts $loSt "trajFragSpec: Odd number of optional arguments! args: $args"
+      logMsg "Odd number of optional arguments! Halting, args: $args" 1
       return ""
       }
 # checks for "exclude" keywords
@@ -208,6 +214,9 @@ proc trajFragSpec {l_fragId {id "top"} args} {
         }
       }
     }
+# restore logLib config status and returning final trajFrag specification
+  logMsg "Returning processed trajFrag specification: $retList" 2
+  state_restore
   return $retList
   }   ;# trajFragSpec
 
