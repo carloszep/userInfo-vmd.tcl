@@ -60,7 +60,7 @@ proc trajFragSpec {l_fragId {id "top"} args} {
 # print log information (logLevel 2 or 3, except for errors)
   save_state
   set args [eval arg_interpreter $args]
-  set_logPrefixStr "  trajfragSpec: "
+  set_logPrefix "  trajfragSpec: "
   logMsg "Interpreting user-specified fragId specifications." 2
   logMsg "l_fragId: $l_fragId" 2
   logMsg "id: $id" 2

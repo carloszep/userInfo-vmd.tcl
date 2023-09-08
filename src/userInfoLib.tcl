@@ -73,13 +73,12 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
     set_logLevel 3
     set_logName "userInfo"
     set_logVersion "0.0.2"
-    namespace eval state {variable maxTrajSizeGB ""}
     add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB \
                        loadedTrajSize get_trajFragList]
     add_variables [list maxTrajSizeGB]
-#    set_logFileName "stdout"
+    set_logFileName "stdout"
     logMsg "" 2
-    set_logPrefixStr "[get_logName_version]: "
+    set_logPrefix "[get_logName_version]: "
 # printing introduction
     logMsg "userInfo library to manage Molecular Dynamics trajectories " 2
     logMsg "  and set up structural analysis in VMD." 2
