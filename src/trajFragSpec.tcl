@@ -59,12 +59,12 @@ proc trajFragSpec {l_fragId {id "top"} args} {
   variable indTFL
 # print log information (logLevel 2 or 3, except for errors)
   save_state
-  set_logPrefixStr "  trajfragInfo: "
+  set args [eval arg_interpreter $args]
+  set_logPrefixStr "  trajfragSpec: "
   logMsg "Interpreting user-specified fragId specifications." 2
   logMsg "l_fragId: $l_fragId" 2
   logMsg "id: $id" 2
   logMsg "args: $args" 2
-  set args [arg_interpreter $args]
 # default values for variables and arguments
   set exclude {}
   if {$id == "top"} {set id [molinfo top]}

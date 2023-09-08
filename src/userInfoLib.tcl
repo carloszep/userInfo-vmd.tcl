@@ -68,11 +68,16 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
   proc init {} {
     variable indTFL
     variable trajFragList
+    variable maxTrajSizeGB
 # initializes of the name and version of the logLib namespace :
+    set_logLevel 3
     set_logName "userInfo"
     set_logVersion "0.0.2"
-    set_logLevel 3
-    set_logFileName "stdout"
+    namespace eval state {variable maxTrajSizeGB ""}
+    add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB \
+                       loadedTrajSize get_trajFragList]
+    add_variables [list maxTrajSizeGB]
+#    set_logFileName "stdout"
     logMsg "" 2
     set_logPrefixStr "[get_logName_version]: "
 # printing introduction
@@ -87,9 +92,6 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
     logMsg "  commands: get_maxTrajSizeGB set_maxTrajSizeGB" 3
     logMsg "            loadedTrajSize get_trajFragList" 3
     logMsg "  variables: maxTrajSizeGB" 3
-    add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB \
-                       loadedTrajSize get_trajFragList]
-    add_variables [list maxTrajSizeGB]
     set i 0
     foreach elem $trajFragList {
       set indTFL($elem) $i
@@ -128,10 +130,12 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
 
 #|      - ;
 #|    - ;
-  }   ;# namespace eval userInfoLib
 
 #|    -run the initialization proc .
-::userInfoLib::init
+init
+
+  }   ;# namespace eval userInfoLib
+
 #|    -external procedures to be added to userInfoLib :
 #|      -trajFragSpec.tcl ;
 source trajFragSpec.tcl
