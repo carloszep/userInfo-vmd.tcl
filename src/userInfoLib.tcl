@@ -77,7 +77,7 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
     variable trajFragList
     variable maxTrajSizeGB
 # initializes of the name and version of the logLib namespace :
-    set_logLevel 1
+    set_logLevel 3
     set_logName "userInfo"
     set_logVersion "0.0.2"
     puts "\n[::userInfoLib::get_logName_version]: Library to manage VMD trajectories from MD simulations."
