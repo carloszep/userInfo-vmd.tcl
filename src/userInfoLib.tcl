@@ -5,12 +5,14 @@
 #|   _ used by other analysis tools .
 #|  -started from the userInfoLib_v.0.0.5 library .
 #|  -dates :
-#|    -created :-2023-05-03.Wed ;
-#|    -modified :-2023-09-01.Fri ;;
+#|    -created :
+#|      -2023-05-03.Wed ;
+#|    -modified :
+#|      -2023-09-01.Fri ;;
 #|  -authors and contributors :
 #|    -Carlos Z. Gómez Castro ;
 #|  -public software repositories :
-#|    -https://github.com/carloszep/anMD-vmd.tcl ;
+#|    -https://github.com/carloszep/userInfo-vmd.tcl ;
 #|  -version information :
 #|    -current version :-0.0.2 ;
 #|    -changes in progress :
@@ -42,12 +44,14 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
 #|        -it is recommended to not using more than ~75% of the total RAM :
 #|          -for instance, with 4 GB of RAM, set maxTrajSizeGB to 3.0 ;;
   variable maxTrajSizeGB 6.0
+
 #|      -currTrajSizeGB :
 #|        -registers the amout of memory occupated by dcd trajectories
 #|         _ loaded into VMD using the userInfoLib utilities .
 #|        -before a traj fragment is loaded (i.e. by trajLoad), it is
 #|         _verified that currTrajSizeGB does not exceed maxTrajSizeGB ;
   variable currTrajSizeGB 0.0
+
 #|      -trajFragList :
 #|        -list of trajectory-related property names used by userInfoLib .
 #|        -default value :
