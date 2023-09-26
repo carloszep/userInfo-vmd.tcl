@@ -17,7 +17,10 @@
 #|    -current version :-0.0.2 ;
 #|    -changes in progress :
 #|      -definition of the userInfoLib namespace .
-#|      -added trajFragSpec.tcl to the userInfoLib namespace ;;
+#|      -added trajFragSpec.tcl to the userInfoLib namespace ;
+#|    -to do list :
+#|      -to incorporate an interpreter of arguments compatible to the
+#|       _ interpreter in logLib ;;
 #|  -notes :
 #|    -for the moment this library uses the global array selInfo ;
 #|  -source :
@@ -74,9 +77,10 @@ namespace export get_maxTrajSizeGB set_maxTrajSizeGB loadedTrajSize
     variable trajFragList
     variable maxTrajSizeGB
 # initializes of the name and version of the logLib namespace :
-    set_logLevel 3
+    set_logLevel 1
     set_logName "userInfo"
     set_logVersion "0.0.2"
+    puts "\n[::userInfoLib::get_logName_version]: Library to manage VMD trajectories from MD simulations."
     add_commands [list get_maxTrajSizeGB set_maxTrajSizeGB \
                        loadedTrajSize get_trajFragList]
     add_variables [list maxTrajSizeGB]
