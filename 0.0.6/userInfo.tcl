@@ -1592,6 +1592,7 @@ namespace eval trajSelId {
     if {$selId == ""} {return}
     getSelInfo $selId selTxt id frag frm iniTime finTime step upd loadStep \
                       lbl desc
+puts "init: step: $step"
     set keepFragIds [trajFragSpec $keepFragIdsUsr $id loSt $loSt]
     if {$id == "top"} {
       puts $loSt "Error: no loaded trajInfo"
